@@ -78,8 +78,8 @@ func (engine *Engine) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	}
 	code, contentType, response := engine.getValue(httpMethod, rPath)
 
-	w.WriteHeader(code)
 	w.Header().Set("Content-Type", contentType)
+	w.WriteHeader(code)
 	w.Write(response)
 }
 
