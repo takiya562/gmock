@@ -8,7 +8,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/takiya562/go-mock/internal/bytesconv"
+	"github.com/takiya562/gmock/internal/bytesconv"
 )
 
 func fakeBody() io.ReadCloser {

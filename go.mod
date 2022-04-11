@@ -1,4 +1,4 @@
-module github.com/takiya562/go-mock
+module github.com/takiya562/gmock
 
 go 1.18
 

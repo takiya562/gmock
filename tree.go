@@ -1,7 +1,7 @@
 package gmock
 
 import (
-	"github.com/takiya562/go-mock/internal/bytesconv"
+	"github.com/takiya562/gmock/internal/bytesconv"
 )
 
 var resPath = "responses/"

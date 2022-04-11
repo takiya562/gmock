@@ -11,7 +11,7 @@ import (
 	"path/filepath"
 
 	"github.com/hashicorp/golang-lru/simplelru"
-	"github.com/takiya562/go-mock/internal/bytesconv"
+	"github.com/takiya562/gmock/internal/bytesconv"
 	"github.com/tidwall/gjson"
 )
 
