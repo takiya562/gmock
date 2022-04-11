@@ -1,13 +1,6 @@
 package gmock
 
 import (
-	"crypto/md5"
-	"fmt"
-	"io/ioutil"
-	"log"
-	"os"
-	"path/filepath"
-
 	"github.com/takiya562/go-mock/internal/bytesconv"
 )
 
@@ -20,6 +13,22 @@ type node struct {
 	children []*node
 	fullPath string
 	leaf     bool
+}
+
+type methodTree struct {
+	method string
+	root   *node
+}
+
+type methodTrees []methodTree
+
+func (trees methodTrees) get(method string) *node {
+	for _, tree := range trees {
+		if tree.method == method {
+			return tree.root
+		}
+	}
+	return nil
 }
 
 func min(a, b int) int {
@@ -113,9 +122,7 @@ walk:
 			}
 			n.children = append(n.children, child)
 			n.incrementChildPrio(len(n.indices) - 1)
-			n = child
 
-			saveResponse(n.fullPath, response)
 			return
 		}
 
@@ -125,28 +132,11 @@ walk:
 
 		n.fullPath = fullPath
 		n.leaf = true
-		saveResponse(n.fullPath, response)
 		return
 	}
 }
 
-func saveResponse(fullPath string, response []byte) {
-	filename := fmt.Sprintf("%x", md5.Sum(bytesconv.StringToBytes(fullPath)))
-	fp := filepath.Join(resPath, filename)
-	f, err := os.Create(fp)
-	if err != nil {
-		log.Fatalf("Failed to create response file '%s': %s", fullPath, err)
-	}
-	defer f.Close()
-	ioutil.WriteFile(fp, response, 0644)
-}
-
-type nodeValue struct {
-	response []byte
-	fullPath string
-}
-
-func (n *node) getValue(path string) (value nodeValue) {
+func (n *node) getValue(path string) bool {
 walk:
 	for {
 		prefix := n.path
@@ -163,20 +153,13 @@ walk:
 				}
 			}
 
-			return nodeValue{
-				fullPath: "",
-			}
+			return false
 		}
 
 		if path == prefix && n.leaf {
-			return nodeValue{
-				fullPath: n.fullPath,
-				response: nil,
-			}
+			return true
 		}
 
-		return nodeValue{
-			fullPath: "",
-		}
+		return false
 	}
 }
